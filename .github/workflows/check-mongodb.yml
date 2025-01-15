@@ -1,0 +1,45 @@
+name: Check MongoDB Connection
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  check-mongo-connection:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Test MongoDB Connection
+        env:
+          MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+        run: |
+          node -e "
+          const mongoose = require('mongoose');
+          const username = process.env.MONGODB_USERNAME;
+          const password = process.env.MONGODB_PASSWORD;
+          const uri = `mongodb+srv://${username}:${password}@cluster0.fhj1j.mongodb.net/test?retryWrites=true&w=majority`;
+
+          mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+            .then(() => {
+              console.log('✅ Successfully connected to MongoDB');
+              process.exit(0);
+            })
+            .catch((err) => {
+              console.error('❌ MongoDB connection error:', err);
+              process.exit(1);
+            });
+          "
