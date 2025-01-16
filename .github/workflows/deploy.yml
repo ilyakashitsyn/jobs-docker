@@ -16,8 +16,6 @@ jobs:
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb+srv
       MONGODB_CLUSTER_ADDRESS: cluster0.fhj1j.mongodb.net
-      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
-      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
       PORT: 8080
     steps:
       - name: Get Code
@@ -41,7 +39,7 @@ jobs:
       - name: Run server
         run: |
           echo "Starting server on port $PORT..."
-          export MONGO_URI="${{ env.MONGODB_CONNECTION_PROTOCOL }}://${{ env.MONGODB_USERNAME }}:${{ env.MONGODB_PASSWORD }}@${{ env.MONGODB_CLUSTER_ADDRESS }}/?retryWrites=true&w=majority"
+          export MONGO_URI="${{ env.MONGODB_CONNECTION_PROTOCOL }}://${{ secrets.MONGODB_USERNAME }}:${{ secrets.MONGODB_PASSWORD }}@${{ env.MONGODB_CLUSTER_ADDRESS }}/?retryWrites=true&w=majority"
           echo "MongoDB URI: $MONGO_URI"
           npm start &
           npx wait-on http://127.0.0.1:$PORT # Waits for the server to be ready
@@ -49,15 +47,10 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Debug MONGO_URI
-        run: |
-          export MONGO_URI="mongodb+srv://<USERNAME>:<PASSWORD>@${{ env.MONGODB_CLUSTER_ADDRESS }}/?retryWrites=true&w=majority"
-          echo "MongoDB URI: $MONGO_URI"
-
       - name: Output information
         run: |
-          echo "MONGODB_USERNAME: $MONGODB_USERNAME"
-          echo "MONGODB_CLUSTER_ADDRESS: $MONGODB_CLUSTER_ADDRESS"
+          echo "MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}"
+          echo "MONGODB_CLUSTER_ADDRESS: ${{ env.MONGODB_CLUSTER_ADDRESS }}"
 
   deploy:
     needs: test
