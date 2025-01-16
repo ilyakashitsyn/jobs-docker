@@ -11,7 +11,6 @@ env:
 
 jobs:
   test:
-    environment: testing
     runs-on: ubuntu-latest
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb+srv
@@ -35,6 +34,11 @@ jobs:
           echo "MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}"
           echo "MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}"
           echo "MONGODB_CLUSTER_ADDRESS: ${{ env.MONGODB_CLUSTER_ADDRESS }}"
+
+      - name: Debug MONGO_URI
+        run: |
+          export MONGO_URI="${{ env.MONGODB_CONNECTION_PROTOCOL }}://${{ secrets.MONGODB_USERNAME }}:${{ secrets.MONGODB_PASSWORD }}@${{ env.MONGODB_CLUSTER_ADDRESS }}/?retryWrites=true&w=majority"
+          echo "Generated MongoDB URI: $MONGO_URI"
 
       - name: Run server
         run: |
