@@ -49,6 +49,11 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Debug MONGO_URI
+        run: |
+          export MONGO_URI="mongodb+srv://<USERNAME>:<PASSWORD>@${{ env.MONGODB_CLUSTER_ADDRESS }}/?retryWrites=true&w=majority"
+          echo "MongoDB URI: $MONGO_URI"
+
       - name: Output information
         run: |
           echo "MONGODB_USERNAME: $MONGODB_USERNAME"
