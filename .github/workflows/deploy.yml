@@ -32,6 +32,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Debug Environment Variables
+        run: |
+          echo "MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}"
+          echo "MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}"
+          echo "MONGODB_CLUSTER_ADDRESS: ${{ env.MONGODB_CLUSTER_ADDRESS }}"
+
       - name: Run server
         run: |
           echo "Starting server on port $PORT..."
