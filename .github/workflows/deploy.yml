@@ -39,10 +39,14 @@ jobs:
       - name: Run server
         run: |
           echo "Starting server on port $PORT..."
+          if [[ -z "${{ secrets.MONGODB_USERNAME }}" || -z "${{ secrets.MONGODB_PASSWORD }}" ]]; then
+            echo "Error: MongoDB credentials are missing!"
+            exit 1
+          fi
           export MONGO_URI="${{ env.MONGODB_CONNECTION_PROTOCOL }}://${{ secrets.MONGODB_USERNAME }}:${{ secrets.MONGODB_PASSWORD }}@${{ env.MONGODB_CLUSTER_ADDRESS }}/?retryWrites=true&w=majority"
           echo "MongoDB URI: $MONGO_URI"
           npm start &
-          npx wait-on http://127.0.0.1:$PORT # Waits for the server to be ready
+          npx wait-on http://127.0.0.1:$PORT
 
       - name: Run tests
         run: npm test
