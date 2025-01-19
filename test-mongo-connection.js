@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 // Укажите свои данные для подключения
 const username = "ilyakashitsyn"; // Замените на имя пользователя из MongoDB
-const password = "FzcMNYp2XlfXEnj3"; // Замените на ваш пароль
+const password = "7M94GAIPSIOLaEds"; // Замените на ваш пароль
 const clusterUrl = "cluster0.fhj1j.mongodb.net"; // Адрес вашего кластера
 const dbName = "jobs-docker"; // Название вашей базы данных
 
